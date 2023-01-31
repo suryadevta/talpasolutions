@@ -302,7 +302,7 @@ Let us visit the pod and see what is happening inside the /vault/secrets/db-cred
 
 Checking the content of /tmp/test.txt
 
-![alt text](images/41.png)
+![alt text](images/45.png)
 
 
 
