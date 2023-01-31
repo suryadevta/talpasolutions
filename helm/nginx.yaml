@@ -1,0 +1,62 @@
+replicaCount: 1
+
+image:
+  repository: "nginx"
+  tag: "latest"
+  pullPolicy: IfNotPresent
+
+vault:
+  enabled: true
+  annotations:
+    vault.hashicorp.com/agent-inject: "true"
+    vault.hashicorp.com/role: "nginx-role"
+    "vault.hashicorp.com/agent-inject-secret-.htpasswd": "secrets/data/nginx"
+    vault.hashicorp.com/secret-volume-path: "/usr/share/nginx/html/creds"
+    vault.hashicorp.com/agent-inject-file-.htpasswd: .htpasswd
+    vault.hashicorp.com/agent-inject-template-.htpasswd: |
+      {{- with secret "secret/data/nginx" -}}
+      {{ .Data.data.user1 }}:{{ .Data.data.password1 }}
+      {{ .Data.data.user2 }}:{{ .Data.data.password2 }}
+      {{- end }}
+
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 80
+serviceAccount:
+  create: true
+  name: nginx
+
+volumeMounts:
+- name: config-volume
+  mountPath: /etc/nginx/conf.d/default.conf
+  readOnly: true
+  subPath: default.conf
+
+volumes:
+- name: config-volume
+  configMap:
+    name: default-conf
+
+configmap:
+  enabled: true
+  name: default-conf
+  data:
+    default.conf: |
+      server {
+        listen       80;
+        listen  [::]:80;
+        server_name  localhost;
+
+        location / {
+            root   /usr/share/nginx/html;
+            index  index.html index.htm;
+            
+            auth_basic "Restricted Area";
+            auth_basic_user_file /usr/share/nginx/html/creds/.htpasswd;
+        }
+        error_page   500 502 503 504  /50x.html;
+        location = /50x.html {
+            root   /usr/share/nginx/html;
+        }
+      }

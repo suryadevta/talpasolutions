@@ -1,0 +1,29 @@
+replicaCount: 1
+
+image:
+  repository: ""
+  tag: "vault-db-credential-rotation"
+  pullPolicy: IfNotPresent
+
+vault:
+  enabled: true
+  annotations:
+        vault.hashicorp.com/agent-inject: "true"
+        vault.hashicorp.com/agent-inject-secret-db-creds: "database/creds/db-app"
+        vault.hashicorp.com/agent-inject-template-db-creds: |
+          {{- with secret "database/creds/db-app" -}}
+          postgresql://{{ .Data.username }}:{{ .Data.password }}@psql-postgresql.postgres:5432/postgres?sslmode=disable
+          {{- end }}
+        vault.hashicorp.com/role: "db-app-role"
+
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 8000
+
+serviceAccount:
+  create: true
+  name: db-app
+
+configmap:
+  enabled: false
