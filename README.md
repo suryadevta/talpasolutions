@@ -269,6 +269,10 @@ Applying the deployment using Helm
 
 ![alt text](images/34.png)
 
+Here we use robindersingh/talpasolution:vault-db-credential-rotation image.
+We use db-app service account
+We fetch secrets from "database/creds/db-app" and write the secrets to /vault/secrets/db-creds path inside the pod.
+
 Validation
 Checking if the pod is running or not
 
@@ -304,6 +308,18 @@ Checking the content of /tmp/test.txt
 
 ![alt text](images/45.png)
 
+# Time Used to compete the task
+
+I completed the task in three days as i was involved in my owen project work.
+Somewhere around 8-9 hours in three dyas took me to finish the task.
+
+# Problems faced during the task completion
+
+-   with Vault templating i have to  do bit of research on that read the docs and than comp;eted succefully.
+-   I Was getting error to acess the cUrls's in first task initially, have the issue with credentials 
+   troubleshooted  that task and it was sucsessfully done than.
+
+No other issues apart from these i got 
 
 
 

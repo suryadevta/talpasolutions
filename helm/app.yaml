@@ -1,7 +1,7 @@
 replicaCount: 1
 
 image:
-  repository: ""
+  repository: "robindersingh/talpasolution"
   tag: "vault-db-credential-rotation"
   pullPolicy: IfNotPresent
 
